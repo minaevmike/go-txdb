@@ -282,3 +282,24 @@ func TestShouldHandlePrepare(t *testing.T) {
 		}
 	}
 }
+
+func TestShouldFailedTwice(t *testing.T) {
+	for _, driver := range drivers() {
+		db, err := sql.Open(driver, "open_twice")
+		if err != nil {
+			t.Fatalf(driver+": open should not return error")
+		}
+		_, err = db.Exec("SELECT 1")
+		if err == nil {
+			t.Fatalf(driver+": should return error")
+		}
+		db, err = sql.Open(driver, "open_twice")
+		if err != nil {
+			t.Fatalf(driver+": open should not return error")
+		}
+		_, err = db.Exec("SELECT 1")
+		if err == nil {
+			t.Fatalf(driver+": should return error")
+		}
+	}
+}

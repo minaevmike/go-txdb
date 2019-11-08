@@ -136,9 +136,13 @@ func (d *txDriver) Open(dsn string) (driver.Conn, error) {
 		}
 
 		c.tx, err = d.db.Begin()
-		d.conns[dsn] = c
+		if err == nil {
+			d.conns[dsn] = c
+		}
 	}
-	c.opened++
+	if err == nil {
+		c.opened++
+	}
 	return c, err
 }
 
